@@ -1,0 +1,20 @@
+{
+  "name": "sugarmill/image-variants",
+  "description": "Resized image variants for responsive delivery. Returns bytes rather than writing files, corrects EXIF orientation, strips metadata, never upscales, and refuses decompression bombs. Zero dependencies.",
+  "version": "1.0.0",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://github.com/sugarmill/image-variants",
+  "authors": [ { "name": "David Sherlock", "homepage": "https://arraypress.com/" } ],
+  "keywords": ["image", "resize", "webp", "avif", "thumbnail", "responsive", "srcset", "exif"],
+  "require": { "php": ">=8.5", "ext-gd": "*" },
+  "require-dev": { "phpunit/phpunit": "^13.0" },
+  "suggest": { "ext-exif": "To correct orientation on photographs from phones and cameras." },
+  "autoload": { "psr-4": { "SugarMill\\ImageVariants\\": "src/" } },
+  "autoload-dev": { "psr-4": { "SugarMill\\ImageVariants\\Tests\\": "tests/" } },
+  "scripts": { "test": "phpunit" },
+  "config": { "optimize-autoloader": true, "sort-packages": true, "preferred-install": "dist" },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "support": { "issues": "https://github.com/sugarmill/image-variants/issues", "source": "https://github.com/sugarmill/image-variants" }
+}
