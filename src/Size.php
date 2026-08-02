@@ -2,7 +2,7 @@
 /**
  * A named output size.
  *
- * @package   SugarMill\ImageVariants
+ * @package   Sugar\ImageVariants
  * @copyright Copyright (c) 2026, ArrayPress Limited
  * @license   GPL-2.0-or-later
  * @since     1.0.0
@@ -10,7 +10,7 @@
 
 declare( strict_types=1 );
 
-namespace SugarMill\ImageVariants;
+namespace Sugar\ImageVariants;
 
 /**
  * Class Size

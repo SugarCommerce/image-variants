@@ -29,13 +29,13 @@ PHP 8.5+, `ext-gd` (`ext-exif` recommended, for orientation)
 ## Installation
 
 ```bash
-composer require sugarmill/image-variants
+composer require sugarcommerce/image-variants
 ```
 
 ## Usage
 
 ```php
-use SugarMill\ImageVariants\Generator;
+use Sugar\ImageVariants\Generator;
 
 $variants = ( new Generator() )->generate( $bytes );
 
@@ -52,7 +52,7 @@ foreach ( $variants as $name => $variant ) {
 ### Sizes
 
 ```php
-use SugarMill\ImageVariants\{Fit, Size};
+use Sugar\ImageVariants\{Fit, Size};
 
 $generator->generate( $bytes, [
     new Size( 'thumb',  300 ),                       // width only, height follows
@@ -84,7 +84,7 @@ new Generator( upscale: true );
 ### Output format
 
 ```php
-use SugarMill\ImageVariants\Format;
+use Sugar\ImageVariants\Format;
 
 new Generator( format: Format::Avif, quality: 70 );
 
