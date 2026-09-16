@@ -2,7 +2,7 @@
 /**
  * A named output size.
  *
- * @package   Sugar\ImageVariants
+ * @package   SugarCommerce\ImageVariants
  * @copyright Copyright (c) 2026, ArrayPress Limited
  * @license   GPL-2.0-or-later
  * @since     1.0.0
@@ -10,7 +10,7 @@
 
 declare( strict_types=1 );
 
-namespace Sugar\ImageVariants;
+namespace SugarCommerce\ImageVariants;
 
 /**
  * Class Size

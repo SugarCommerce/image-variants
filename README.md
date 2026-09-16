@@ -35,7 +35,7 @@ composer require sugarcommerce/image-variants
 ## Usage
 
 ```php
-use Sugar\ImageVariants\Generator;
+use SugarCommerce\ImageVariants\Generator;
 
 $variants = ( new Generator() )->generate( $bytes );
 
@@ -52,7 +52,7 @@ foreach ( $variants as $name => $variant ) {
 ### Sizes
 
 ```php
-use Sugar\ImageVariants\{Fit, Size};
+use SugarCommerce\ImageVariants\{Fit, Size};
 
 $generator->generate( $bytes, [
     new Size( 'thumb',  300 ),                       // width only, height follows
@@ -84,7 +84,7 @@ new Generator( upscale: true );
 ### Output format
 
 ```php
-use Sugar\ImageVariants\Format;
+use SugarCommerce\ImageVariants\Format;
 
 new Generator( format: Format::Avif, quality: 70 );
 

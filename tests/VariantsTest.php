@@ -2,7 +2,7 @@
 /**
  * Variant generation.
  *
- * @package   Sugar\ImageVariants
+ * @package   SugarCommerce\ImageVariants
  * @copyright Copyright (c) 2026, ArrayPress Limited
  * @license   GPL-2.0-or-later
  * @since     1.0.0
@@ -10,18 +10,18 @@
 
 declare( strict_types=1 );
 
-namespace Sugar\ImageVariants\Tests;
+namespace SugarCommerce\ImageVariants\Tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Sugar\ImageVariants\Fit;
-use Sugar\ImageVariants\Format;
-use Sugar\ImageVariants\Generator;
-use Sugar\ImageVariants\Size;
-use Sugar\ImageVariants\Source;
-use Sugar\ImageVariants\Variant;
+use SugarCommerce\ImageVariants\Fit;
+use SugarCommerce\ImageVariants\Format;
+use SugarCommerce\ImageVariants\Generator;
+use SugarCommerce\ImageVariants\Size;
+use SugarCommerce\ImageVariants\Source;
+use SugarCommerce\ImageVariants\Variant;
 
 #[CoversClass( Generator::class )]
 #[CoversClass( Format::class )]
