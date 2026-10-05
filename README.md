@@ -21,6 +21,7 @@ Serving a 4 MB phone photograph as a 300px thumbnail is the most common performa
 - 🖼️ **Transparency preserved**, or flattened to white rather than black.
 - 📐 **Contain and cover** fits, and never upscales unless asked.
 - 🗜️ **WebP, AVIF, JPEG, PNG, GIF** output, with graceful capability probing.
+- 🌐 **Edge resizing URLs** — Cloudflare's `/cdn-cgi/image/`, for images you do not own and should not copy.
 
 ## Requirements
 
@@ -104,6 +105,21 @@ new Generator(
 
 The pixel limit is the one that matters. A decoded image costs about four bytes per pixel, so 25 megapixels is roughly 100 MB of memory — and the byte limit will not catch a bomb, because the whole point of one is being small on disk. Dimensions are read from the header first, so an oversized image is refused rather than allocated.
 
+## Resizing at the edge
+
+Some images should not be copied at all. One a seller uploaded to Stripe is served back unchanged at up to 2 MB, and a resized copy stored here would drift from the original the day they replace it. A CDN can resize it from the original on the way past instead:
+
+```php
+use SugarCommerce\ImageVariants\{EdgeUrl, Fit, Format};
+
+EdgeUrl::cloudflare( 'shop.example.com', $stripe_image, 640 );
+// https://shop.example.com/cdn-cgi/image/width=640,quality=82,fit=cover,format=auto/https://files.stripe.com/…
+
+EdgeUrl::cloudflare( 'shop.example.com', $url, 300, 70, Fit::Contain, Format::Avif );
+```
+
+It needs Image Resizing switched on for the zone. Anything it cannot improve comes back unchanged — an empty URL, no host configured, a source that is not `https://`, a host that is not a bare host name — so a template never has to ask whether resizing is on. PNG and GIF are refused, because the resizer cannot write them; leave the format `null` and the edge picks per browser.
+
 ## Storing the results
 
 ```php
@@ -141,7 +157,7 @@ composer install
 composer test
 ```
 
-41 tests against real encoded images, not fixtures — format detection across all five formats, aspect-ratio preservation, contain versus cover, the no-upscale rule, transparency surviving into PNG and flattening to white in JPEG, and both limits including a small-file-many-pixels bomb.
+57 tests, mostly against real encoded images rather than fixtures — format detection across all five formats, aspect-ratio preservation, contain versus cover, the no-upscale rule, transparency surviving into PNG and flattening to white in JPEG, and both limits including a small-file-many-pixels bomb, and edge URLs that pass through everything they cannot safely rewrite.
 
 ## License
 
