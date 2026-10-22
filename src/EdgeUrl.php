@@ -126,7 +126,7 @@ final readonly class EdgeUrl {
 	 * @return bool
 	 */
 	private static function is_host( string $host ): bool {
-		return 1 === preg_match( '/^[A-Za-z0-9](?:[A-Za-z0-9.\-]*[A-Za-z0-9])?(?::\d{1,5})?$/', $host );
+		return 1 === preg_match( '/^[A-Za-z0-9](?:[A-Za-z0-9.\-]*[A-Za-z0-9])?(?::\d{1,5})?$/D', $host );
 	}
 
 	/**

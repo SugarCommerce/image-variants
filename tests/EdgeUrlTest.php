@@ -87,6 +87,7 @@ final class EdgeUrlTest extends TestCase {
 			'host with path'    => array( 'shop.example.com/evil', self::IMAGE ),
 			'host with space'   => array( 'shop example.com', self::IMAGE ),
 			'host with userinfo' => array( 'user@shop.example.com', self::IMAGE ),
+			'host with a newline' => array( "shop.example.com\n", self::IMAGE ),
 			// 1.2.0: a source a browser would rewrite into the zone's own paths.
 			'dot segments'      => array( 'shop.example.com', 'https://x.test/../../../../account/delete' ),
 			'encoded dot segments' => array( 'shop.example.com', 'https://x.test/%2e%2E/%2e./.%2e/account' ),
