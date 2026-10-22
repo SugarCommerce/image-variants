@@ -25,10 +25,29 @@ namespace SugarCommerce\ImageVariants;
  */
 enum Format: string {
 
+	/**
+	 * JPEG: photographs, no transparency.
+	 */
 	case Jpeg = 'jpeg';
-	case Png  = 'png';
-	case Gif  = 'gif';
+
+	/**
+	 * PNG: lossless, with transparency.
+	 */
+	case Png = 'png';
+
+	/**
+	 * GIF: a palette of 256 colours; only the first frame is read.
+	 */
+	case Gif = 'gif';
+
+	/**
+	 * WebP: the default output — smaller than JPEG, with transparency.
+	 */
 	case Webp = 'webp';
+
+	/**
+	 * AVIF: smaller again, slower to encode, missing from older GD builds.
+	 */
 	case Avif = 'avif';
 
 	/**

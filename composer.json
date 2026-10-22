@@ -1,7 +1,7 @@
 {
   "name": "sugarcommerce/image-variants",
   "description": "Resized image variants for responsive delivery. Returns bytes rather than writing files, corrects EXIF orientation, strips metadata, never upscales, and refuses decompression bombs. Zero dependencies.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "library",
   "license": "GPL-2.0-or-later",
   "homepage": "https://github.com/sugarcommerce/image-variants",

@@ -27,6 +27,8 @@ namespace SugarCommerce\ImageVariants;
 final class Source {
 
 	/**
+	 * A decoded image and what is known about it.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param \GdImage $image  Decoded image.

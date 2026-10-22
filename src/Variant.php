@@ -27,6 +27,8 @@ namespace SugarCommerce\ImageVariants;
 final readonly class Variant {
 
 	/**
+	 * An encoded variant.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $name   The size name this was generated for.
@@ -59,7 +61,10 @@ final readonly class Variant {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $base Basename without extension.
+	 * @param string $base Basename without extension. Used as given — pass
+	 *                     a slug you made, not a name an uploader chose,
+	 *                     since a separator or `..` in it becomes part of
+	 *                     a storage key.
 	 *
 	 * @return string e.g. `photo-600.webp`.
 	 */

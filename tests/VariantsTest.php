@@ -327,6 +327,38 @@ final class VariantsTest extends TestCase {
 
 	/* ─── Variant ───────────────────────────────────────────────────── */
 
+	/**
+	 * An upscaled size allocates its canvas like a decoded image does, so a
+	 * width taken from a request must not be a way round the pixel limit.
+	 */
+	public function test_an_upscaled_variant_is_held_to_the_pixel_limit(): void {
+		$variants = ( new Generator( max_pixels: 100_000, upscale: true ) )->generate(
+			$this->image( 100, 100 ),
+			array( new Size( 'ok', 300 ), new Size( 'bomb', 50_000 ), new Size( 'tile', 20_000, 20_000, Fit::Cover ) )
+		);
+
+		$this->assertSame( array( 'ok' ), array_keys( $variants ) );
+	}
+
+	/**
+	 * @return array<string, array{0: int, 1: int, 2: int}>
+	 */
+	public static function bad_settings(): array {
+		return array(
+			'quality zero'    => array( 0, 1, 1 ),
+			'quality over'    => array( 101, 1, 1 ),
+			'no pixels'       => array( 82, 0, 1 ),
+			'negative bytes'  => array( 82, 1, -1 ),
+		);
+	}
+
+	#[DataProvider( 'bad_settings' )]
+	public function test_settings_out_of_range_are_refused( int $quality, int $pixels, int $bytes ): void {
+		$this->expectException( \InvalidArgumentException::class );
+
+		new Generator( quality: $quality, max_pixels: $pixels, max_bytes: $bytes );
+	}
+
 	public function test_variant_metadata(): void {
 		$variant = ( new Generator() )->generate( $this->image( 1600, 900 ) )['card'];
 

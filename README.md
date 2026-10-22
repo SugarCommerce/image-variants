@@ -103,7 +103,7 @@ new Generator(
 );
 ```
 
-The pixel limit is the one that matters. A decoded image costs about four bytes per pixel, so 25 megapixels is roughly 100 MB of memory — and the byte limit will not catch a bomb, because the whole point of one is being small on disk. Dimensions are read from the header first, so an oversized image is refused rather than allocated.
+The pixel limit is the one that matters. A decoded image costs about four bytes per pixel, so 25 megapixels is roughly 100 MB of memory — and the byte limit will not catch a bomb, because the whole point of one is being small on disk. Dimensions are read from the header first, so an oversized image is refused rather than allocated. Each variant is held to the same pixel limit, so an upscaled size — say, a width taken from a request — is skipped rather than allocated. Quality must be 1–100 and both limits at least one, or the constructor throws.
 
 ## Resizing at the edge
 
@@ -118,7 +118,7 @@ EdgeUrl::cloudflare( 'shop.example.com', $stripe_image, 640 );
 EdgeUrl::cloudflare( 'shop.example.com', $url, 300, 70, Fit::Contain, Format::Avif );
 ```
 
-It needs Image Resizing switched on for the zone. Anything it cannot improve comes back unchanged — an empty URL, no host configured, a source that is not `https://`, a host that is not a bare host name — so a template never has to ask whether resizing is on. PNG and GIF are refused, because the resizer cannot write them; leave the format `null` and the edge picks per browser.
+It needs Image Resizing switched on for the zone. Anything it cannot improve comes back unchanged — an empty URL, no host configured, a source that is not `https://`, or that carries whitespace, a backslash or a `..` segment a browser would resolve against the zone's own paths, a host that is not a bare host name — so a template never has to ask whether resizing is on. PNG and GIF are refused, because the resizer cannot write them; leave the format `null` and the edge picks per browser.
 
 ## Storing the results
 
@@ -157,7 +157,7 @@ composer install
 composer test
 ```
 
-57 tests, mostly against real encoded images rather than fixtures — format detection across all five formats, aspect-ratio preservation, contain versus cover, the no-upscale rule, transparency surviving into PNG and flattening to white in JPEG, and both limits including a small-file-many-pixels bomb, and edge URLs that pass through everything they cannot safely rewrite.
+69 tests, mostly against real encoded images rather than fixtures — format detection across all five formats, aspect-ratio preservation, contain versus cover, the no-upscale rule, transparency surviving into PNG and flattening to white in JPEG, and both limits including a small-file-many-pixels bomb and an upscaled one, settings out of range, and edge URLs that pass through everything they cannot safely rewrite.
 
 ## License
 

@@ -29,7 +29,10 @@ namespace SugarCommerce\ImageVariants;
  * string — a template deciding whether to render an image should not also
  * have to decide whether resizing was configured. Only `https://` sources are
  * rewritten: a resizer fetching plain HTTP would serve an image over TLS that
- * anyone on the path could have swapped.
+ * anyone on the path could have swapped. A source with whitespace, a
+ * backslash or a `..` segment passes through too: the source sits in the
+ * resizing URL's path, where a browser would resolve `../` against the
+ * zone's own paths and send the request somewhere other than the resizer.
  *
  * @since 1.1.0
  */
@@ -66,7 +69,7 @@ final readonly class EdgeUrl {
 		Fit $fit = Fit::Cover,
 		?Format $format = null,
 	): string {
-		if ( '' === $url || ! str_starts_with( $url, 'https://' ) || ! self::is_host( $host ) ) {
+		if ( ! self::is_source( $url ) || ! self::is_host( $host ) ) {
 			return $url;
 		}
 
@@ -79,6 +82,35 @@ final readonly class EdgeUrl {
 			self::format( $format ),
 			$url
 		);
+	}
+
+	/**
+	 * Whether a source URL can be put in a resizing URL's path as it is.
+	 *
+	 * It must be absolute `https://` with a host, and carry nothing a
+	 * browser would rewrite on the way: no whitespace or control character,
+	 * no backslash (read as a slash), and no `.` or `..` segment, plain or
+	 * percent-encoded — `…/https://x/../../../account` resolves to the
+	 * zone's `/account`, not to the resizer.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param string $url Candidate.
+	 *
+	 * @return bool
+	 */
+	private static function is_source( string $url ): bool {
+		if ( ! str_starts_with( $url, 'https://' ) || 1 === preg_match( '/[\x00-\x20\x7F\\\\]/', $url ) ) {
+			return false;
+		}
+
+		if ( 1 === preg_match( '#/(?:\.|%2e){1,2}(?:[/?\#]|$)#i', $url ) ) {
+			return false;
+		}
+
+		$host = parse_url( $url, PHP_URL_HOST );
+
+		return is_string( $host ) && '' !== $host;
 	}
 
 	/**

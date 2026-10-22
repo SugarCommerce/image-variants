@@ -20,6 +20,8 @@ namespace SugarCommerce\ImageVariants;
 final readonly class Size {
 
 	/**
+	 * A size, checked.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param string   $name   Key the variant is returned under.
@@ -50,7 +52,7 @@ final readonly class Size {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return self[]
+	 * @return list<self>
 	 */
 	public static function defaults(): array {
 		return array(
@@ -65,11 +67,13 @@ final readonly class Size {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int[] $widths Pixel widths.
+	 * @param array<int> $widths Pixel widths.
 	 *
-	 * @return self[]
+	 * @return list<self>
+	 *
+	 * @throws \InvalidArgumentException On a width below one.
 	 */
 	public static function widths( array $widths ): array {
-		return array_map( static fn( int $w ): self => new self( (string) $w, $w ), $widths );
+		return array_values( array_map( static fn( int $w ): self => new self( (string) $w, $w ), $widths ) );
 	}
 }

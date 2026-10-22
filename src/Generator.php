@@ -22,6 +22,8 @@ namespace SugarCommerce\ImageVariants;
 final readonly class Generator {
 
 	/**
+	 * A generator with its output format and limits.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param Format $format      Output format. WebP is the default: it
@@ -35,11 +37,16 @@ final readonly class Generator {
 	 *                            pixel, so this is the real memory bound
 	 *                            — and the defence against a decompression
 	 *                            bomb, where a 12 KB PNG expands to
-	 *                            gigabytes.
+	 *                            gigabytes. Variants are held to it
+	 *                            too, so an upscaled size cannot become
+	 *                            the bomb instead.
 	 * @param int    $max_bytes   Largest source accepted, in bytes.
 	 * @param bool   $upscale     Whether to enlarge a source smaller than
 	 *                            the target. Off, because enlarging adds
 	 *                            no detail and costs bandwidth.
+	 *
+	 * @throws \InvalidArgumentException For a quality outside 1–100, or a
+	 *                                   limit below one.
 	 */
 	public function __construct(
 		public Format $format = Format::Webp,
@@ -47,19 +54,28 @@ final readonly class Generator {
 		public int $max_pixels = 50_000_000,
 		public int $max_bytes = 33_554_432,
 		public bool $upscale = false,
-	) {}
+	) {
+		if ( $quality < 1 || $quality > 100 ) {
+			throw new \InvalidArgumentException( 'Quality must be between 1 and 100.' );
+		}
+
+		if ( $max_pixels < 1 || $max_bytes < 1 ) {
+			throw new \InvalidArgumentException( 'The limits must be at least one.' );
+		}
+	}
 
 	/**
 	 * Generate variants from image bytes.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $bytes Image data.
-	 * @param Size[] $sizes Requested sizes.
+	 * @param string     $bytes Image data.
+	 * @param list<Size> $sizes Requested sizes; the defaults when empty.
 	 *
 	 * @return array<string, Variant> Keyed by size name. A size larger
 	 *                                than the source is absent unless
-	 *                                upscaling is on.
+	 *                                upscaling is on, and one beyond the
+	 *                                pixel limit is always absent.
 	 *
 	 * @throws \InvalidArgumentException When the image cannot be used.
 	 */
@@ -204,12 +220,19 @@ final readonly class Generator {
 	 * @param Size   $size   Target size.
 	 *
 	 * @return Variant|null Null when the target is larger than the source
-	 *                      and upscaling is off.
+	 *                      and upscaling is off, or larger than the pixel
+	 *                      limit at all.
 	 */
 	private function resize( Source $source, Size $size ): ?Variant {
 		[ $width, $height, $crop ] = $this->target( $source, $size );
 
 		if ( ! $this->upscale && ( $width > $source->width || $height > $source->height ) ) {
+			return null;
+		}
+
+		// The canvas is allocated like any decoded image, so it answers to
+		// the same limit — an upscaled size from a request is a bomb too.
+		if ( $width < 1 || $height < 1 || $width * $height > $this->max_pixels ) {
 			return null;
 		}
 
